@@ -16,3 +16,7 @@ INSERT INTO supplier VALUES(NULL,'上海供货商','上海供货商的简介',20
 INSERT INTO supplier VALUES(NULL,'成都供货商','成都供货商的简介',20,1);
 INSERT INTO supplier VALUES(NULL,'武汉供货商','武汉供货商的简介',20,1);
 INSERT INTO supplier VALUES(NULL,'重庆供货商','重庆供货商的简介',20,1);
+
+
+#修改重庆供货商，在其名字后添加_del后缀
+;UPDATE supplier SET NAME=CONCAT(NAME,'_del') WHERE id=5
