@@ -70,7 +70,7 @@ CREATE TABLE article(
 
 ###################  day3  ##############################
 #goods_category(商品分类)
-CREATE TABLE goods_category (
+;CREATE TABLE goods_category (
   id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   `name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '名称',
   parent_id TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父分类',
@@ -83,7 +83,7 @@ CREATE TABLE goods_category (
   INDEX (lft, rght)
 ) ENGINE = MYISAM COMMENT '商品分类'
 
-INSERT INTO goods_category VALUES(1,'平板电视',9,3,4,3,'',1);
+;INSERT INTO goods_category VALUES(1,'平板电视',9,3,4,3,'',1);
 INSERT INTO goods_category VALUES(2,'空调',9,5,6,3,'',1);
 INSERT INTO goods_category VALUES(3,'冰箱',9,7,8,3,'',1);
 INSERT INTO goods_category VALUES(4,'取暖器',8,11,14,3,'',1);
