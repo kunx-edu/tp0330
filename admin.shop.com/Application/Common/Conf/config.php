@@ -7,6 +7,9 @@ return array(
         '__CSS__'=> BASE_URL . '/Public/Admin/css',
         '__JS__'=> BASE_URL . '/Public/Admin/js',
         '__IMG__'=> BASE_URL . '/Public/Admin/images',
+        '__UPLOADIFY__'=> BASE_URL . '/Public/Admin/ext/uploadify',
+        '__LAYER__'=> BASE_URL . '/Public/Admin/ext/layer',
+        '__ZTREE__'=> BASE_URL . '/Public/Admin/ext/ztree',
     ],
     
     /* 数据库设置 */
@@ -30,4 +33,5 @@ return array(
         'PAGE_SIZE'=>20,
         'PAGE_THEME'=>'%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%',
     ],
+    'UPLOAD_SETTING'=>  require 'upload.php',
 );

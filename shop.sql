@@ -68,4 +68,28 @@ CREATE TABLE article(
 )ENGINE=MYISAM COMMENT '文章内容'
 
 
-;TRUNCATE article
+###################  day3  ##############################
+#goods_category(商品分类)
+CREATE TABLE goods_category (
+  id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '名称',
+  parent_id TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父分类',
+  lft SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '左边界',
+  rght SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '右边界',
+  `level` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '级别',
+  intro TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  INDEX (parent_id),
+  INDEX (lft, rght)
+) ENGINE = MYISAM COMMENT '商品分类'
+
+INSERT INTO goods_category VALUES(1,'平板电视',9,3,4,3,'',1);
+INSERT INTO goods_category VALUES(2,'空调',9,5,6,3,'',1);
+INSERT INTO goods_category VALUES(3,'冰箱',9,7,8,3,'',1);
+INSERT INTO goods_category VALUES(4,'取暖器',8,11,14,3,'',1);
+INSERT INTO goods_category VALUES(5,'净化器',8,15,16,3,'',1);
+INSERT INTO goods_category VALUES(6,'加湿器',8,17,18,3,'',1);
+INSERT INTO goods_category VALUES(7,'小太阳',4,12,13,4,'',1);
+INSERT INTO goods_category VALUES(8,'生活电器',10,10,19,2,'',1);
+INSERT INTO goods_category VALUES(9,'大家电',10,2,9,2,'',1);
+INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
