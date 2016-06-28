@@ -30,6 +30,9 @@ class GoodsCategoryController extends \Think\Controller {
         $this->display();
     }
 
+    /**
+     * 添加分类,自动计算左右节点和层级.
+     */
     public function add() {
         if (IS_POST) {
             //收集数据
@@ -46,13 +49,18 @@ class GoodsCategoryController extends \Think\Controller {
         }
     }
 
+    /**
+     * 修改节点.
+     * 不允许移动到后代节点下
+     * @param type $id
+     */
     public function edit($id) {
         if (IS_POST) {
             //收集数据
             if ($this->_model->create() === false) {
                 $this->error(get_error($this->_model));
             }
-            if ($this->_model->save() === false) {
+            if ($this->_model->saveCategory() === false) {
                 $this->error(get_error($this->_model));
             }
             $this->success('修改成功', U('index'));
@@ -66,8 +74,12 @@ class GoodsCategoryController extends \Think\Controller {
         }
     }
 
+    /**
+     * 物理删除节点,会同时删除后代节点
+     * @param type $id
+     */
     public function remove($id) {
-        if ($this->_model->delete($id) === false) {
+        if ($this->_model->deleteCategory($id) === false) {
             $this->error(get_error($this->_model));
         } else {
             $this->success('删除成功', U('index'));
