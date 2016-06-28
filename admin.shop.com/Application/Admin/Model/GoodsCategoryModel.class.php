@@ -29,5 +29,19 @@ class GoodsCategoryModel extends \Think\Model {
     public function getList() {
         return $this->where(['status'=>['egt',0]])->order('lft')->select();
     }
+    
+    /**
+     * 完成分类的添加，和计算左右节点和层级的功能。
+     * 使用nestedsets实现
+     */
+    public function addCategory() {
+        unset($this->data[$this->getPk()]);
+        //创建ORM对象
+        $orm = D('MySQL','Logic');
+        //创建nestedsets对象
+        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->trueTableName, 'lft', 'rght', 'parent_id', 'id', 'level');
+        $nestedsets->insert($this->data['parent_id'], $this->data, 'bottom');
+        exit;
+    }
 
 }

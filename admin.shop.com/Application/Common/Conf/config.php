@@ -10,6 +10,7 @@ return array(
         '__UPLOADIFY__'=> BASE_URL . '/Public/Admin/ext/uploadify',
         '__LAYER__'=> BASE_URL . '/Public/Admin/ext/layer',
         '__ZTREE__'=> BASE_URL . '/Public/Admin/ext/ztree',
+        '__TREEGRID__'=> BASE_URL . '/Public/Admin/ext/treegrid',
     ],
     
     /* 数据库设置 */

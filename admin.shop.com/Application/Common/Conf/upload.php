@@ -3,7 +3,7 @@
 return [
     'rootPath'     => ROOT_PATH,
     'savePath'     => 'uploads/',
-    'mimes'        => array(), //允许上传的文件MiMe类型
+    'mimes'        => array('image/jpeg','image/png','image/gif'), //允许上传的文件MiMe类型
     'maxSize'      => 0, //上传的文件大小限制 (0-不做限制)
     'exts'         => array(), //允许上传的文件后缀
     'autoSub'      => true, //自动子目录保存文件
