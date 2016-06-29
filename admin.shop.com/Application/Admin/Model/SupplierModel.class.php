@@ -33,27 +33,22 @@ class SupplierModel extends \Think\Model{
         $page_setting = C('PAGE_SETTING');
         //获取总行数
         $count = $this->where($cond)->count();
-//        $page = new \Think\Page($count,2);
         $page = new \Think\Page($count,$page_setting['PAGE_SIZE']);
         //更改page样式
-//        $page->setConfig('theme', '%HEADER% %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%');
         $page->setConfig('theme', $page_setting['PAGE_THEME']);
         $page_html = $page->show();
-//        dump($page_html);
         //获取分页数据
-//        $rows = $this->where($cond)->page(I('get.p',1),2)->select();
         $rows = $this->where($cond)->page(I('get.p',1),$page_setting['PAGE_SIZE'])->select();
-//        dump($rows);
         //返回
         return compact(['rows','page_html']);
-        
-        
-        
-//        dump($rst);
-//        exit;
-//        return [
-//            'rows'=>$rows,
-//            'page_html'=>$page_html,
-//        ];
     }
+    
+    /**
+     * 获取所有的商品分类。
+     * @return array
+     */
+    public function getList() {
+        return $this->where(['status' => ['gt', 0]])->select();
+    }
+
 }

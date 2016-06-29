@@ -38,7 +38,7 @@ class GoodsCategoryModel extends \Think\Model {
         //创建ORM对象
         $orm        = D('MySQL', 'Logic');
         //创建nestedsets对象
-        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->trueTableName, 'lft', 'rght', 'parent_id', 'id', 'level');
+        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->getTableName(), 'lft', 'rght', 'parent_id', 'id', 'level');
         return $nestedsets->insert($this->data['parent_id'], $this->data, 'bottom');
     }
 
@@ -55,7 +55,7 @@ class GoodsCategoryModel extends \Think\Model {
             //创建ORM对象
             $orm        = D('MySQL', 'Logic');
             //创建nestedsets对象
-            $nestedsets = new \Admin\Logic\NestedSets($orm, $this->trueTableName, 'lft', 'rght', 'parent_id', 'id', 'level');
+            $nestedsets = new \Admin\Logic\NestedSets($orm, $this->getTableName(), 'lft', 'rght', 'parent_id', 'id', 'level');
             //moveUnder只计算左右节点和层级，不保存其它数据
             if ($nestedsets->moveUnder($this->data['id'], $this->data['parent_id'], 'bottom') === false) {
                 $this->error = '不能将分类移动到后代分类下';
@@ -73,7 +73,7 @@ class GoodsCategoryModel extends \Think\Model {
         //创建ORM对象
         $orm        = D('MySQL', 'Logic');
         //创建nestedsets对象
-        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->trueTableName, 'lft', 'rght', 'parent_id', 'id', 'level');
+        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->getTableName(), 'lft', 'rght', 'parent_id', 'id', 'level');
         //delete会将所有的后代分类一并删除,并且重新计算相关节点的左右节点.
         return $nestedsets->delete($id);
     }
