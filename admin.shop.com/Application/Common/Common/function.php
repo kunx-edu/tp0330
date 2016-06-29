@@ -27,11 +27,15 @@ function get_error(\Think\Model $model) {
  * @param string $name        表单控件的name属性.
  * @return string 下拉列表的html代码.
  */
-function arr2select(array $data, $name_field = 'name', $value_field = 'id', $name = '') {
+function arr2select(array $data, $name_field = 'name', $value_field = 'id', $name = '',$default_value='') {
     $html = '<select name="' . $name . '" class="' . $name . '">';
     $html .= '<option value=""> 请选择 </option>';
     foreach ($data as $key => $value) {
-        $html .= '<option value="' . $value[$value_field] . '">' . $value[$name_field] . '</option>';
+        if($value[$value_field] == $default_value){
+            $html .= '<option value="' . $value[$value_field] . '" selected="selected">' . $value[$name_field] . '</option>';
+        }else{
+            $html .= '<option value="' . $value[$value_field] . '">' . $value[$name_field] . '</option>';
+        }
     }
     $html .= '</select>';
     return $html;

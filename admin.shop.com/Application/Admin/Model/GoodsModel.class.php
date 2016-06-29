@@ -90,11 +90,29 @@ class GoodsModel extends \Think\Model {
             return false;
         }
         //3.保存相册
-
+        $goods_gallery_model = M('GoodsGallery');
+        $pathes = I('post.path');
+        $data = [];
+        foreach($pathes as $path){
+            $data[] = [
+                'goods_id'=>$goods_id,
+                'path'=>$path,
+            ];
+        }
+        //如果上传了相册,并且相册保存失败,就回滚
+        if($data && ($goods_gallery_model->addAll($data)===false)){
+            $this->rollback();
+            return false;
+        }
         $this->commit();
         return true;
     }
 
+    /**
+     * 获取分页数据
+     * @param array $cond 查询条件.
+     * @return type
+     */
     public function getPageResult(array $cond = []) {
         $cond         = array_merge(['status' => 1], $cond);
         //1.获取总条数
@@ -121,4 +139,61 @@ class GoodsModel extends \Think\Model {
         return compact('rows', 'page_html');
     }
 
+    /**
+     * 获取商品信息,包括详细介绍和相册.
+     * @param integer $id 商品id.
+     * @return type
+     */
+    public function getGoodsInfo($id) {
+        //获取商品的基本信息
+        $row = $this->find($id);
+        //由于在前端展示的时候,需要使用到各个状态,所以我们变成一个json对象
+        $row['goods_status'];
+        $tmp = [];
+        if($row['goods_status']&1){
+            $tmp[] = 1;
+        }
+        if($row['goods_status']&2){
+            $tmp[] = 2;
+        }
+        if($row['goods_status']&4){
+            $tmp[] = 4;
+        }
+        $row['goods_status'] = json_encode($tmp);
+        unset($tmp);
+        //获取商品的详细描述
+        $goods_intro_model = M('GoodsIntro');
+        $row['content'] = $goods_intro_model->getFieldByGoodsId($id,'content');
+        //获取商品的相册
+        $goods_gallery_model = M('GoodsGallery');
+        $row['galleries']=$goods_gallery_model->getFieldByGoodsId($id,'id,path');
+        return $row;
+    }
+    
+    /**
+     * 修改商品 包括商品详细描述和相册.
+     * @return boolean
+     */
+    public function saveGoods() {
+        $request_data = $this->data;
+        $this->startTrans();
+        //1.保存基本信息
+        if($this->save()===false){
+            $this->rollback();
+            return false;
+        }
+        //2.保存详细描述
+        $data              = [
+            'goods_id' => $request_data['id'],
+            'content'  => I('post.content', '', false),
+        ];
+        $goods_intro_model = M('GoodsIntro');
+        if ($goods_intro_model->save($data) === false) {
+            $this->rollback();
+            return false;
+        }
+        //3.TODO::保存相册
+        $this->commit();
+        return true;
+    }
 }

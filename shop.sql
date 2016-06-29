@@ -129,3 +129,14 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
  `date` DATE PRIMARY KEY,
  num SMALLINT UNSIGNED 
 )CHARSET utf8 ENGINE INNODB 
+
+;TRUNCATE goods_num
+
+##商品相册
+;CREATE TABLE `goods_gallery` (
+   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `goods_id` BIGINT(20) DEFAULT NULL COMMENT '商品ID',
+  `path` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '商品图片地址',
+  PRIMARY KEY (`id`),
+  KEY `goods_id` (`goods_id`)
+) ENGINE=INNODB  DEFAULT CHARSET=utf8 COMMENT='商品相册'
