@@ -14,12 +14,22 @@ class GoodsController extends \Think\Controller{
     }
     
     public function index() {
-        
+        //1.获取商品列表
+        $this->assign($this->_model->getPageResult());
+        $this->display();
     }
     
     public function add() {
         if(IS_POST){
-            dump(I('post.','',false));
+            //收集数据
+            if($this->_model->create() === false){
+                $this->error(get_error($this->_model));
+            }
+            //添加商品
+            if($this->_model->addGoods() === false){
+                $this->error(get_error($this->_model));
+            }
+            $this->success('添加成功',U('index'));
         }else{
             //1.获取所有的商品分类,使用ztree展示,所以转换成json
             $goods_category_model = D('GoodsCategory');

@@ -122,3 +122,10 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
   `goods_id` BIGINT PRIMARY KEY COMMENT '商品ID',
   `content` TEXT COMMENT '商品描述'
 ) ENGINE = INNODB COMMENT '商品描述' 
+
+
+# 每天创建的商品个数
+;CREATE TABLE goods_num (
+ `date` DATE PRIMARY KEY,
+ num SMALLINT UNSIGNED 
+)CHARSET utf8 ENGINE INNODB 
