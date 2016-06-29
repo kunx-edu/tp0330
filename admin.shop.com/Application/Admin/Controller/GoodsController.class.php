@@ -77,4 +77,16 @@ class GoodsController extends \Think\Controller {
         $this->assign('suppliers', $suppliers);
     }
 
+    /**
+     * 移除相册表中的记录.
+     * @param type $id
+     */
+    public function removeGallery($id) {
+        $goods_gallery_model = M('GoodsGallery');
+        if($goods_gallery_model->delete($id) ===false){
+            $this->error('删除失败');
+        } else{
+            $this->success('删除成功');
+        }
+    }
 }
