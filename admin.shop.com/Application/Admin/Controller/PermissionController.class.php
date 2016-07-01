@@ -42,7 +42,17 @@ class PermissionController extends \Think\Controller {
 
     public function edit($id) {
         if(IS_POST){
-            
+            //收集数据
+            if ($this->_model->create() === false) {
+                $this->error(get_error($this->_model));
+            }
+            //保存数据
+            if ($this->_model->savePermission() === false) {
+                $this->error(get_error($this->_model));
+            }
+
+            //跳转
+            $this->success('修改成功', U('index'));
         }else{
             //获取数据
             $row = $this->_model->find($id);
