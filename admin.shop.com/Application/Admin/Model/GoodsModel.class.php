@@ -29,7 +29,7 @@ class GoodsModel extends \Think\Model {
         ['shop_price', 'currency', '售价不合法'],
         ['stock', 'require', '库存不能为空'],
     ];
-    
+     
     //自动完成
     protected $_auto         = [
         ['sn', 'createSn', self::MODEL_INSERT, 'callback'],

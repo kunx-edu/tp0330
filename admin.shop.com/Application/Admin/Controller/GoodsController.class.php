@@ -16,6 +16,30 @@ class GoodsController extends \Think\Controller {
     public function index() {
         //1.获取商品列表
         $this->assign($this->_model->getPageResult());
+        
+        //取出商品分类
+        //1.获取所有的商品分类,使用ztree展示,所以转换成json
+        $goods_category_model = D('GoodsCategory');
+        $goods_categories     = $goods_category_model->getList();
+        $this->assign('goods_categories', $goods_categories);
+
+        //2.获取所有的品牌列表
+        $brand_model = D('Brand');
+        $brands      = $brand_model->getList();
+        $this->assign('brands', $brands);
+        
+        //3.获取促销状态
+        $goods_statuses = [
+            ['id'=>1,'name'=>'精品',],
+            ['id'=>2,'name'=>'新品',],
+            ['id'=>4,'name'=>'热销',],
+        ];
+        $this->assign('goods_statuses', $goods_statuses);
+        $is_on_sales = [
+            ['id'=>1,'name'=>'上架',],
+            ['id'=>0,'name'=>'下架',],
+        ];
+        $this->assign('is_on_sales', $is_on_sales);
         $this->display();
     }
 
@@ -35,6 +59,7 @@ class GoodsController extends \Think\Controller {
             $this->display();
         }
     }
+
 
     public function edit($id) {
         if (IS_POST) {
