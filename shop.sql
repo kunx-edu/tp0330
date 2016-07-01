@@ -140,3 +140,60 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
   PRIMARY KEY (`id`),
   KEY `goods_id` (`goods_id`)
 ) ENGINE=INNODB  DEFAULT CHARSET=utf8 COMMENT='商品相册'
+
+
+
+#########################  day6   ##################################permission(权限表)
+;CREATE TABLE permission (
+  `id` SMALLINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '名称',
+  `path` VARCHAR (50) NOT NULL DEFAULT '' COMMENT 'URL',
+  `parent_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父分类',
+  `lft` SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '左边界',
+  `rght` SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '右边界',
+  `level` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '级别',
+  `intro` TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  `sort` TINYINT NOT NULL DEFAULT 20 COMMENT '排序',
+  INDEX (parent_id),
+  INDEX (lft, rght)
+) ENGINE = INNODB COMMENT '权限'
+ 
+ 
+#role(角色表)
+;CREATE TABLE role (
+  `id` TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '名称',
+  `intro` TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  `sort` TINYINT NOT NULL DEFAULT 20 COMMENT '排序'
+) ENGINE = INNODB COMMENT '角色'
+ 
+ 
+#role_permission(角色权限表)
+;CREATE TABLE role_permission (
+  `role_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '角色ID',
+  `permission_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限ID',
+  INDEX (`role_id`)
+) ENGINE = INNODB COMMENT '角色权限关系'
+ 
+ 
+#admin(管理员表)
+;CREATE TABLE admin (
+  `id` TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `username` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '用户名' UNIQUE,
+  `password` CHAR(32) NOT NULL DEFAULT '' COMMENT '密码',
+  `salt` CHAR(6) NOT NULL DEFAULT '' COMMENT '盐',
+  `email` VARCHAR (30) NOT NULL DEFAULT '' COMMENT '邮箱' UNIQUE,
+  `add_time` INT NOT NULL DEFAULT 0 COMMENT '注册时间',
+  `last_login_time` INT NOT NULL DEFAULT 0 COMMENT '最后登录时间',
+  `last_login_ip` BIGINT NOT NULL DEFAULT 0 COMMENT '最后登录IP'
+) ENGINE = INNODB COMMENT '管理员'
+ 
+ 
+#admin_role(管理员角色)
+;CREATE TABLE admin_role (
+  `admin_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '管理员ID',
+  `role_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '角色ID',
+  INDEX (`admin_id`)
+) ENGINE = INNODB COMMENT '管理员角色关系'

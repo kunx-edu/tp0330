@@ -24,9 +24,9 @@
                 <!-- 推荐 -->
                 {:arr2select($goods_statuses,'name','id','goods_status',I('get.goods_status'))}
                 <!-- 上架 -->
-                {:arr2select($is_on_sales,'name','id','is_on_sales',I('get.is_on_sales'))}
+                {:arr2select($is_on_sales,'name','id','is_on_sale',I('get.is_on_sale'))}
                 <!-- 关键字 -->
-                关键字 <input type="text" name="keyword" size="15" />
+                关键字 <input type="text" name="name" size="15" value='{:I("get.name")}'/>
                 <input type="submit" value=" 搜索 " class="button" />
             </form>
         </div>
