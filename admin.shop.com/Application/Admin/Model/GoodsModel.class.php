@@ -19,7 +19,7 @@ class GoodsModel extends \Think\Model {
      */
     protected $_validate     = [
         ['name', 'require', '商品名称不能为空'],
-        ['sn', '', '货号已存在', self::VALUE_VALIDATE],
+        ['sn', '', '货号已存在', self::VALUE_VALIDATE,'unique'],
         ['goods_category_id', 'require', '商品分类不能为空'],
         ['brand_id', 'require', '品牌不能为空'],
         ['supplier_id', 'require', '供货商不能为空'],
@@ -29,13 +29,26 @@ class GoodsModel extends \Think\Model {
         ['shop_price', 'currency', '售价不合法'],
         ['stock', 'require', '库存不能为空'],
     ];
+    
     //自动完成
     protected $_auto         = [
         ['sn', 'createSn', self::MODEL_INSERT, 'callback'],
-        ['goods_status', 'array_sum', self::MODEL_INSERT, 'function'],
         ['inputtime', NOW_TIME, self::MODEL_INSERT],
+        ['goods_status', 'calcGoodsStatus', self::MODEL_BOTH, 'callback'],
     ];
 
+    /**
+     * 求和,求出商品推荐类型的位运算值.
+     * @param type $goods_status
+     * @return int
+     */
+    protected function calcGoodsStatus($goods_status) {
+        if(isset($goods_status)){
+            return array_sum($goods_status);
+        }else{
+            return 0;
+        }
+    }
     /**
      * 判断是否提交了货号,如果没有,就生成一个.
      * @param string $sn
@@ -192,7 +205,21 @@ class GoodsModel extends \Think\Model {
             $this->rollback();
             return false;
         }
-        //3.TODO::保存相册
+        //3.保存相册
+        $goods_gallery_model = M('GoodsGallery');
+        $pathes = I('post.path');
+        $data = [];
+        foreach($pathes as $path){
+            $data[] = [
+                'goods_id'=>$request_data['id'],
+                'path'=>$path,
+            ];
+        }
+        //如果上传了相册,并且相册保存失败,就回滚
+        if($data && ($goods_gallery_model->addAll($data)===false)){
+            $this->rollback();
+            return false;
+        }
         $this->commit();
         return true;
     }

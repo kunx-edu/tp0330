@@ -275,6 +275,7 @@
                 //通过a标签上的data属性来判断是不是新上传的
                 var id = $(this).attr('data');
                 var flag = true;
+                var parent_node = $(this).parent();
                 //删除数据库的记录,使用ajax
                 if(id){
                     var url = '{:U("Goods/removeGallery")}';
@@ -282,27 +283,20 @@
                         id:id,
                     };
                     $.getJSON(url,data,function(response){
-                        console.debug(response);
                         //判断是否删除成功
-                        if(response.status){
-                            //成功,删除节点
-                        }else{
+                        if(!response.status){
                             //失败,提示错误
                             flag = false;
                         }
                     });
-                }else{//直接移除div即可
-                    
                 }
                 if(flag){
                     //移除div
-                    var parent_node = $(this).parent();
                     parent_node.remove();
                     layer.alert('删除成功',{icon:6});
                 }else{
                     layer.alert('删除失败',{icon:5});
                 }
-                console.debug($(this));
                 //移除div
                 return false;
             });
