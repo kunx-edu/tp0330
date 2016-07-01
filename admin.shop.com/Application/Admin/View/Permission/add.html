@@ -116,16 +116,18 @@
 
 
             //////////////////////   回显数据    ////////////////////////////
-            $('.status').val([{$row.status}]);
-            //回显ztree
-            //1.找到父级权限的节点
-            var parent_permission_node = permissions_ztree.getNodeByParam('id', {$row.parent_id});
-            console.debug($('#permission_id'))
-            //2.选择这个节点
-            permissions_ztree.selectNode(parent_permission_node);
-            //3.绑定数据
-            $('#permission_id').val(parent_permission_node.id);
-            $('#permission_name').val(parent_permission_node.name);
+            $('.status').val([{$row.status|default=1}]);
+            <present name="row">
+                //回显ztree
+                //1.找到父级权限的节点
+                var parent_permission_node = permissions_ztree.getNodeByParam('id', {$row.parent_id});
+                console.debug($('#permission_id'))
+                //2.选择这个节点
+                permissions_ztree.selectNode(parent_permission_node);
+                //3.绑定数据
+                $('#permission_id').val(parent_permission_node.id);
+                $('#permission_name').val(parent_permission_node.name);
+            </present>
         </script>
     </body>
 </html>

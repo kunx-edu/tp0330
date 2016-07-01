@@ -29,6 +29,7 @@ class PermissionModel extends \Think\Model {
 
     //使用nestedsets添加权限
     public function addPermission() {
+        unset($this->data[$this->getPk()]);
         //创建orm
         $orm        = D('MySQL', 'Logic');
         //创建nestedsets对象
@@ -59,6 +60,20 @@ class PermissionModel extends \Think\Model {
         }
         //保存基本数据
         return $this->save();
+    }
+
+    public function deletePermission($id) {
+        //创建orm
+        $orm        = D('MySQL', 'Logic');
+        //创建nestedsets对象
+        $nestedsets = new \Admin\Logic\NestedSets($orm, $this->getTableName(), 'lft', 'rght', 'parent_id', 'id', 'level');
+        if ($nestedsets->delete($id) === false) {
+            $this->error = '删除失败';
+            exit;
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

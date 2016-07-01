@@ -139,12 +139,6 @@ class MySQLLogic implements DbMysql {
     public function query($sql, array $args = array()) {
 
         //有可能是查询语句，所以如果是查询，就输出一些信息
-        if (strpos('SELECT', $sql) !== false) {
-            echo __METHOD__;
-            dump(func_get_args());
-            echo '<hr />';
-        }
-
         //获取所有的实参
         $args   = func_get_args();
         //获取sql语句

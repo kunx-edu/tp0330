@@ -64,8 +64,16 @@ class PermissionController extends \Think\Controller {
         }
     }
 
+    /**
+     * 移除节点及其后代节点.
+     * @param type $id
+     */
     public function remove($id) {
-        $this->display();
+        if($this->_model->deletePermission($id) === false){
+            $this->error(get_error($this->_model));
+        }
+        //跳转
+        $this->success('删除成功', U('index'));
     }
 
     private function _before_view() {
