@@ -62,16 +62,39 @@ class PermissionModel extends \Think\Model {
         return $this->save();
     }
 
+    /**
+     * 删除权限及其后代权限
+     * 如果权限已经不存在,那么角色的关联也应当销毁,销毁的当然也是包括后代的.
+     * @param type $id
+     * @return boolean
+     */
     public function deletePermission($id) {
+        $this->startTrans();
+        //获取后代权限
+        $permission_info = $this->field('lft,rght')->find($id);
+        $cond = [
+            'lft'=>['egt',$permission_info['lft']],
+            'rght'=>['elt',$permission_info['rght']],
+        ];
+        $permission_ids = $this->where($cond)->getField('id',true);
+        //删除角色-权限中间表的相关权限记录
+        $role_permission_model = M('RolePermission');
+        if($role_permission_model->where(['permission_id'=>['in',$permission_ids]])->delete()===false){
+            $this->error = '删除角色-权限关联失败';
+            $this->rollback();
+            return false;
+        }
         //创建orm
         $orm        = D('MySQL', 'Logic');
         //创建nestedsets对象
         $nestedsets = new \Admin\Logic\NestedSets($orm, $this->getTableName(), 'lft', 'rght', 'parent_id', 'id', 'level');
+        
         if ($nestedsets->delete($id) === false) {
             $this->error = '删除失败';
-            exit;
+            $this->rollback();
             return false;
         } else {
+            $this->commit();
             return true;
         }
     }

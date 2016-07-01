@@ -101,4 +101,27 @@ class RoleModel extends \Think\Model{
         $this->commit();
         return true;
     }
+    
+    /**
+     * 删除角色,同时删除对应的权限关联.
+     * @param integer $id 角色id.
+     */
+    public function deleteRole($id) {
+        $this->startTrans();
+        //删除角色记录
+        if($this->delete($id) === false){
+            $this->rollback();
+            return false;
+        }
+        
+        //删除权限关联
+        $role_permission_model = M('RolePermission');
+        if($role_permission_model->where(['role_id'=>$id])->delete()===false){
+            $this->error = '删除权限关联失败';
+            $this->rollback();
+            return false;
+        }
+        $this->commit();
+        return true;
+    }
 }

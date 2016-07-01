@@ -65,7 +65,10 @@ class RoleController extends \Think\Controller {
     }
 
     public function remove($id) {
-        
+        if($this->_model->deleteRole($id) === false){
+            $this->error(get_error($this->_model));
+        }
+        $this->success('删除成功', U('index'));
     }
 
     private function _before_view() {
