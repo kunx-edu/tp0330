@@ -97,7 +97,7 @@
                     chkboxType: {"Y": "s", "N": "s"},
                 },
                 callback: {
-                    onCheck: function (event, tree_obj, node) {
+                    onCheck: function () {
                         //1.获取所有的被勾选的节点
                         var nodes = permissions_ztree.getCheckedNodes(true);
                         //2.遍历这些节点,清空隐藏域,添加当前的所有勾选的节点
@@ -116,6 +116,24 @@
 
             //展开所有的节点
             permissions_ztree.expandAll(true);
+            
+            
+            ///////////////////////////////         回显数据      ///////////////////////////////
+            $('.status').val([{$row.status|default=1}]);
+            <present name="row">
+                var permission_ids = {$row.permission_ids};
+                //遍历所有的权限id,然后勾选
+                $(permission_ids).each(function(i,v){
+                    //找到这个节点
+                    var node = permissions_ztree.getNodeByParam('id',v);
+                    permissions_ztree.checkNode(node,true);
+                    console.debug(node);
+
+                    //2.遍历这些节点,清空隐藏域,添加当前的所有勾选的节点
+                    var html = '<input type="hidden" name="permission_id[]" value="' + v + '"/>';
+                    $(html).appendTo($('#permission_ids'));
+                });
+            </present>
         </script>
     </body>
 </html>
