@@ -14,6 +14,9 @@ class PermissionController extends \Think\Controller{
     }
     
     public function index() {
+        //获取所有的权限列表
+        $rows = $this->_model->getList();
+        $this->assign('rows', $rows);
         $this->display();
     }
     public function add() {

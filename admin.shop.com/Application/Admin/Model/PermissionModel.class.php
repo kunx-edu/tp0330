@@ -38,4 +38,6 @@ class PermissionModel extends \Think\Model{
         }
         return true;
     }
+    
+    
 }
