@@ -32,21 +32,21 @@
                     <tr>
                         <td class="label">权限名称</td>
                         <td>
-                            <input type="text" name="name" maxlength="60" value="" />
+                            <input type="text" name="name" maxlength="60" value="{$row.name}" />
                             <span class="require-field">*</span>
                         </td>
                     </tr>
                     <tr>
                         <td class="label">权限地址</td>
                         <td>
-                            <input type="text" name="path" maxlength="60" size="40" value="" />
+                            <input type="text" name="path" maxlength="60" size="40" value="{$row.path}" />
                         </td>
                     </tr>
                     <tr>
                         <td class="label">父级权限</td>
                         <td>
                             <input type='hidden' name="parent_id" id='permission_id'/>
-                            <input type='text' disabled='disabled' id='pemission_name'/>
+                            <input type='text' disabled='disabled' id='permission_name'/>
                             <ul id='pemission-ztree' class="ztree"></ul>
                         </td>
                     </tr>
@@ -59,14 +59,14 @@
                     <tr>
                         <td class="label">排序</td>
                         <td>
-                            <input type="text" name="sort" maxlength="40" size="15" value="50" />
+                            <input type="text" name="sort" maxlength="40" size="15" value="{$row.sort|default=50}" />
                         </td>
                     </tr>
                     <tr>
                         <td class="label">是否显示</td>
                         <td>
-                            <input type="radio" name="status" value="1" checked="checked" /> 是
-                            <input type="radio" name="status" value="0"  /> 否
+                            <input type="radio" name="status" value="1" class='status'/> 是
+                            <input type="radio" name="status" value="0" class='status' /> 否
                         </td>
                     </tr>
                     <tr>
@@ -95,22 +95,36 @@
                         rootPId: 0
                     }
                 },
-                callback:{
-                    onClick:function(event,ztree_obj,node){
+                callback: {
+                    onClick: function (event, ztree_obj, node) {
                         $('#permission_id').val(node.id);
                         $('#permission_name').val(node.name);
                     },
                 },
             };
-            
+
             //节点数据
             var permissions = {$permissions};
-            
+
             //初始化ztree
             var permissions_ztree = $.fn.zTree.init($("#pemission-ztree"), setting, permissions);
-            
+
             //展开所有的节点
             permissions_ztree.expandAll(true);
+
+
+
+            //////////////////////   回显数据    ////////////////////////////
+            $('.status').val([{$row.status}]);
+            //回显ztree
+            //1.找到父级权限的节点
+            var parent_permission_node = permissions_ztree.getNodeByParam('id', {$row.parent_id});
+            console.debug($('#permission_id'))
+            //2.选择这个节点
+            permissions_ztree.selectNode(parent_permission_node);
+            //3.绑定数据
+            $('#permission_id').val(parent_permission_node.id);
+            $('#permission_name').val(parent_permission_node.name);
         </script>
     </body>
 </html>
