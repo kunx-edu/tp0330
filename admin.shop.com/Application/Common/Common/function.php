@@ -42,3 +42,12 @@ function arr2select(array $data, $name_field = 'name', $value_field = 'id', $nam
     $html .= '</select>';
     return $html;
 }
+
+/**
+ * 加盐加密
+ * @param string $password 原密码
+ * @param string $salt     盐
+ */
+function salt_mcrypt($password,$salt){
+    return md5(md5($password).$salt);
+}

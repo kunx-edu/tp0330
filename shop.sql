@@ -197,3 +197,28 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
   `role_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '角色ID',
   INDEX (`admin_id`)
 ) ENGINE = INNODB COMMENT '管理员角色关系'
+
+######################################   day7  ##################################
+#menu(菜单表)
+;CREATE TABLE menu (
+  `id` TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '名称',
+  `path` VARCHAR (50) NOT NULL DEFAULT '' COMMENT 'path:module/controller/action',
+  `parent_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '父分类',
+  `lft` SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '左边界',
+  `rght` SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '右边界',
+  `level` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '级别',
+  `intro` TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  `sort` TINYINT NOT NULL DEFAULT 20 COMMENT '排序',
+  INDEX (`parent_id`),
+  INDEX (`lft`, `rght`)
+) ENGINE = INNODB COMMENT '菜单表'
+
+
+#menu(菜单和权限的关系)
+;CREATE TABLE menu_permission (
+  `menu_id` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '菜单',
+  `permission_id` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限ID',
+  KEY (`permission_id`)
+) ENGINE = INNODB COMMENT '菜单权限' 

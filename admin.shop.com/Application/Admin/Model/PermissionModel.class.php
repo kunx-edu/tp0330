@@ -84,6 +84,22 @@ class PermissionModel extends \Think\Model {
             $this->rollback();
             return false;
         }
+        
+        
+        
+        //删除菜单和权限的关联
+        $menu_permission_model = M('MenuPermission');
+        //先删除历史关系
+        //查询出子级菜单列表
+        if ($menu_permission_model->where(['permission_id' =>$id])->delete() === false) {
+            $this->error = '删除菜单-权限关联失败';
+            $this->rollback();
+            return false;
+        }
+        
+        
+        
+        
         //创建orm
         $orm        = D('MySQL', 'Logic');
         //创建nestedsets对象
