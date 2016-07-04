@@ -208,7 +208,12 @@ class AdminModel extends \Think\Model{
             'admin_id'=>$admin_id,
         ];
         $permissions = M()->distinct(true)->field('path')->table('admin_role')->alias('ar')->join('__ROLE_PERMISSION__ as rp ON ar.`role_id`=rp.`role_id`')->join('__PERMISSION__ as p ON p.`id`=rp.`permission_id`')->where($cond)->select();
-        permissions($permissions);
+//        $pids = [];
+        $paths = [];
+        foreach($permissions as $permission){
+            $paths[] = $permission['path'];
+        }
+        permission_pathes($paths);
         return true;
     }
 }

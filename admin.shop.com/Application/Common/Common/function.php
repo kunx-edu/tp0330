@@ -70,10 +70,14 @@ function login($data=null){
  * @param mixed $data
  * @return type
  */
-function permissions($data=null){
+function permission_pathes($data=null){
     if(is_null($data)){
-        return session('PERMISSIONS');
+        $pathes = session('PERMISSION_PATHES');
+        if(!is_array($pathes)){
+            $pathes = [];
+        }
+        return $pathes;
     }else{
-        session('PERMISSIONS',$data);
+        session('PERMISSION_PATHES',$data);
     }
 }
