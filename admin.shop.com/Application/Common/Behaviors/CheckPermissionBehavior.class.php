@@ -10,6 +10,10 @@ class CheckPermissionBehavior extends \Think\Behavior{
         
         //获取用户信息
         $userinfo = login();
+        //如果没有登陆,就自动登陆
+        if(!$userinfo){
+            $userinfo = D('Admin')->autoLogin();
+        }
         if(isset($userinfo['username']) && $userinfo['username'] == 'admin'){
             return true;
         }
