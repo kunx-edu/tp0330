@@ -249,19 +249,22 @@ class AdminModel extends \Think\Model {
             return false;
         }
         //为了避免token被窃取,自动登陆一次就重置
-        $admin_token_model->delete($userinfo['id']);
+        $admin_token_model->delete($data['admin_id']);
         //生成cookie和数据表数据
         $data = [
-            'admin_id' => $userinfo['id'],
+            'admin_id' => $data['admin_id'],
             'token'    => \Org\Util\String::randString(40),
         ];
 
         cookie('USER_AUTO_LOGIN_TOKEN', $data, 604800); //保存一个星期
-        
+        $admin_token_model->add($data);//将新token保存到数据表中.
         
         //如果匹配,保存用户信息到session中
         $userinfo = $this->find($data['admin_id']);
         login($userinfo);
+        
+        //获取并保存用户权限
+        $this->getPermissions($userinfo['id']);
         return $userinfo;
     }
 
