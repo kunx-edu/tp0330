@@ -51,4 +51,6 @@ return array(
             'Admin/Admin/changePassword',
         ],
     ],
+    
+    'COOKIE_PREFIX'=>'admin_shop_com_',
 );

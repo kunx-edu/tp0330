@@ -198,6 +198,24 @@ class AdminModel extends \Think\Model{
         //获取用户权限
         $this->getPermissions($userinfo['id']);
         
+        //删除用户相关的token记录
+        $admin_token_model = M('AdminToken');
+        $admin_token_model->delete($userinfo['id']);
+        
+        //自动登陆相关
+        if(I('post.remember')){
+            //生成cookie和数据表数据
+            $data = [
+                'admin_id'=>$userinfo['id'],
+                'token'=> \Org\Util\String::randString(40),
+            ];
+            
+            cookie('USER_AUTO_LOGIN_TOKEN',$data,604800);//保存一个星期
+            
+            $admin_token_model->add($data);
+        }
+        
+        
         return $userinfo;
     }
     

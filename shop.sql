@@ -226,4 +226,23 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
 
 ##############  day8  #################
 #获取role_id
-;SELECT * FROM admin_role WHERE admin_id=1
+;
+SELECT DISTINCT 
+  path 
+FROM
+  admin_role AS ar 
+  JOIN role_permission AS rp 
+    ON ar.`role_id` = rp.`role_id` 
+  JOIN permission AS p 
+    ON p.`id` = rp.`permission_id` 
+WHERE path <> '' 
+  AND admin_id = 1 
+  
+  
+  
+ ### 保存用户的自动登陆信息   
+ 
+ ;CREATE TABLE admin_token (
+  admin_id INT UNSIGNED PRIMARY KEY,
+  token CHAR(40)
+) CHARSET utf8 
