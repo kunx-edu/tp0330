@@ -51,3 +51,29 @@ function arr2select(array $data, $name_field = 'name', $value_field = 'id', $nam
 function salt_mcrypt($password,$salt){
     return md5(md5($password).$salt);
 }
+
+/**
+ * 获取和设置用户session
+ * @param mixed $data
+ * @return type
+ */
+function login($data=null){
+    if(is_null($data)){
+        return session('USERINFO');
+    }else{
+        session('USERINFO',$data);
+    }
+}
+
+/**
+ * 获取和设置用户权限session
+ * @param mixed $data
+ * @return type
+ */
+function permissions($data=null){
+    if(is_null($data)){
+        return session('PERMISSIONS');
+    }else{
+        session('PERMISSIONS',$data);
+    }
+}

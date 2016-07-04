@@ -6,6 +6,8 @@ class IndexController extends Controller {
         $this->display();
     }
     public function top(){
+        $userinfo = login();
+        $this->assign('userinfo',$userinfo);
         $this->display();
     }
     public function menu(){

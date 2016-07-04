@@ -50,6 +50,10 @@ class AdminController extends \Think\Controller {
         }
     }
 
+    /**
+     * 编辑管理员.
+     * @param type $id
+     */
     public function edit($id) {
         if(IS_POST){
             if ($this->_model->create() === false) {
@@ -106,4 +110,8 @@ class AdminController extends \Think\Controller {
         }
     }
 
+    public function logout() {
+        session(null);
+        $this->success('退出成功',U('login'));
+    }
 }

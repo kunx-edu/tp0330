@@ -222,3 +222,8 @@ INSERT INTO goods_category VALUES(10,'家用电器',0,1,20,1,'',1);
   `permission_id` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '权限ID',
   KEY (`permission_id`)
 ) ENGINE = INNODB COMMENT '菜单权限' 
+
+
+##############  day8  #################
+#获取role_id
+;SELECT * FROM admin_role WHERE admin_id=1

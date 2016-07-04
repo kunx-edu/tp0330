@@ -21,7 +21,7 @@ class AdminModel extends \Think\Model{
         ['email','require','邮箱不能为空'],
         ['email','email','邮箱格式不合法',self::EXISTS_VALIDATE],
         ['email','','邮箱已被占用',self::EXISTS_VALIDATE,'unique'],
-        ['captcha','checkCaptcha','验证码不正确',self::EXISTS_VALIDATE,'callback'],
+//        ['captcha','checkCaptcha','验证码不正确',self::EXISTS_VALIDATE,'callback'],
     ];
     
     /**
@@ -191,6 +191,24 @@ class AdminModel extends \Think\Model{
             'id'=>$userinfo['id'],
         ];
         $this->save($data);
+        
+        //将用户数据进行保存
+        login($userinfo);
+        
+        //获取用户权限
+        $this->getPermissions($userinfo['id']);
+        
         return $userinfo;
+    }
+    
+    private function getPermissions($admin_id){
+        //SELECT DISTINCT path FROM admin_role AS ar JOIN role_permission AS rp ON ar.`role_id`=rp.`role_id` JOIN permission AS p ON p.`id`=rp.`permission_id` WHERE path<>'' AND admin_id=1
+        $cond=[
+            'path'=>['neq',''],
+            'admin_id'=>$admin_id,
+        ];
+        $permissions = M()->distinct(true)->field('path')->table('admin_role')->alias('ar')->join('__ROLE_PERMISSION__ as rp ON ar.`role_id`=rp.`role_id`')->join('__PERMISSION__ as p ON p.`id`=rp.`permission_id`')->where($cond)->select();
+        permissions($permissions);
+        return true;
     }
 }
