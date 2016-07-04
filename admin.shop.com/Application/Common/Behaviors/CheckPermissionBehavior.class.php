@@ -14,22 +14,14 @@ class CheckPermissionBehavior extends \Think\Behavior{
             return true;
         }
         
+        $ignore_setting = C('ACCESS_IGNORE');
         //获取权限列表
         $pathes = permission_pathes();
         //配置所有用户都可以访问的页面
-        $ignore = [
-            'Admin/Admin/login',
-            'Admin/Captcha/captcha',
-        ];
+        $ignore = $ignore_setting['IGNORE'];
         //登陆用户可见页面
-        $user_ignore = [
-            'Admin/Index/index',
-            'Admin/Index/top',
-            'Admin/Index/menu',
-            'Admin/Index/main',
-            'Admin/Admin/logout',
-            'Admin/Admin/changePassword',
-        ];
+        $user_ignore = $ignore_setting['USER_IGNORE'];
+        
         //允许访问的页面有,角色处获取的权限和忽略列表
         $urls = array_merge($pathes,$ignore);
         if($userinfo){
