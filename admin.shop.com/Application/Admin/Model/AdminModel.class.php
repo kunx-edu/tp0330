@@ -14,13 +14,14 @@ class AdminModel extends \Think\Model{
      */
     protected $_validate = [
         ['username','require','用户名不能为空'],
-        ['username','','用户名已被占用',self::EXISTS_VALIDATE,'unique'],
+        ['username','','用户名已被占用',self::EXISTS_VALIDATE,'unique','register'],
         ['password','require','密码不能为空',self::EXISTS_VALIDATE],
         ['password','6,16','密码长度不合法',self::EXISTS_VALIDATE,'length'],
         ['repassword','password','两次密码不一致',self::EXISTS_VALIDATE,'confirm'],
         ['email','require','邮箱不能为空'],
         ['email','email','邮箱格式不合法',self::EXISTS_VALIDATE],
         ['email','','邮箱已被占用',self::EXISTS_VALIDATE,'unique'],
+        ['captcha','checkCaptcha','验证码不正确',self::EXISTS_VALIDATE,'callback'],
     ];
     
     /**
@@ -29,9 +30,19 @@ class AdminModel extends \Think\Model{
      * @var type 
      */
     protected $_auto = [
-        ['add_time',NOW_TIME],
-        ['salt','\Org\Util\String::randString',self::MODEL_INSERT,'function']
+        ['add_time',NOW_TIME,'register'],
+        ['salt','\Org\Util\String::randString','register','function']
     ];
+    
+    /**
+     * 验证验证码是否匹配.
+     * @param string $code 用户输入的验证码.
+     * @return type
+     */
+    protected function checkCaptcha($code) {
+        $verify = new \Think\Verify();
+        return $verify->check($code);
+    }
     
     /**
      * 获取分页数据
@@ -152,5 +163,34 @@ class AdminModel extends \Think\Model{
         }
         $this->commit();
         return true;
+    }
+    
+    /**
+     * 验证用户名和密码.
+     */
+    public function login() {
+        $username = $this->data['username'];
+        $password = $this->data['password'];
+        //获取用户信息,以便得到盐
+        $userinfo = $this->getByUsername($username);
+        if(!$userinfo){
+            $this->error = '用户名或密码不匹配';
+            return false;
+        }
+        //验证密码
+        $salt_password = salt_mcrypt($password, $userinfo['salt']);
+        if($salt_password!=$userinfo['password']){
+            $this->error = '用户名或密码不匹配';
+            return false;
+        }
+        
+        //保存用户的最后登陆时间和ip
+        $data = [
+            'last_login_time'=>NOW_TIME,
+            'last_login_ip'=>  get_client_ip(1),
+            'id'=>$userinfo['id'],
+        ];
+        $this->save($data);
+        return $userinfo;
     }
 }

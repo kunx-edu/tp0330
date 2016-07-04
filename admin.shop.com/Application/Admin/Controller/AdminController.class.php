@@ -88,5 +88,22 @@ class AdminController extends \Think\Controller {
         $roles      = $role_model->getList();
         $this->assign('roles', json_encode($roles));
     }
+    
+    /**
+     * 后台管理员登陆和验证
+     */
+    public function login() {
+        if(IS_POST){
+            if ($this->_model->create('','login') === false) {
+                $this->error(get_error($this->_model));
+            }
+            if ($this->_model->login() === false) {
+                $this->error(get_error($this->_model));
+            }
+            $this->success('登陆成功', U('Index/index'));
+        }else{
+            $this->display();
+        }
+    }
 
 }
