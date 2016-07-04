@@ -37,7 +37,7 @@ class AdminController extends \Think\Controller {
 
     public function add() {
         if (IS_POST) {
-            if ($this->_model->create() === false) {
+            if ($this->_model->create('','register') === false) {
                 $this->error(get_error($this->_model));
             }
             if ($this->_model->addAdmin() === false) {
@@ -98,7 +98,7 @@ class AdminController extends \Think\Controller {
      */
     public function login() {
         if(IS_POST){
-            if ($this->_model->create('','login') === false) {
+            if ($this->_model->create() === false) {
                 $this->error(get_error($this->_model));
             }
             if ($this->_model->login() === false) {
