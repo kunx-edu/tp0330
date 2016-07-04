@@ -112,6 +112,7 @@ class AdminController extends \Think\Controller {
 
     public function logout() {
         session(null);
+        cookie(null);
         $this->success('退出成功',U('login'));
     }
 }

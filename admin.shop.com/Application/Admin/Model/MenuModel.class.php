@@ -170,4 +170,29 @@ class MenuModel extends \Think\Model {
         return $row;
     }
 
+    /**
+     * 获取用户可见的菜单,超级管理员可以看到所有菜单
+     * @return array 菜单列表
+     */
+    public function getMenuList() {
+        
+        //如果是超级管理员,就可以看到所有的菜单
+        $userinfo = login();
+        if($userinfo['username']=='admin'){
+            //获取用户菜单的id
+            $menus = $this->distinct(true)->field('id,parent_id,name,path')->alias('m')->join('__MENU_PERMISSION__ as mp ON mp.menu_id=m.id')->select();
+        }else{
+            //获取用户权限id
+            $pids = permission_pids();
+
+            //获取用户菜单的id
+            if($pids){
+                $menus = $this->distinct(true)->field('id,parent_id,name,path')->alias('m')->join('__MENU_PERMISSION__ as mp ON mp.menu_id=m.id')->where(['permission_id'=>['in',$pids]])->select();
+            }else{
+                $menus = [];
+            }
+        }
+        //获取菜单信息
+        return $menus;
+    }
 }

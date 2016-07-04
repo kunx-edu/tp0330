@@ -246,3 +246,21 @@ WHERE path <> ''
   admin_id INT UNSIGNED PRIMARY KEY,
   token CHAR(40)
 ) CHARSET utf8 
+
+;TRUNCATE permission
+
+;INSERT INTO `permission` VALUES ('3', '商品管理', '', '0', '32', '41', '1', '商品管理', '1', '50');
+INSERT INTO `permission` VALUES ('4', '商品删除', 'Admin/Goods/remove', '3', '33', '34', '2', '商品删除', '1', '50');
+INSERT INTO `permission` VALUES ('12', '商品添加', 'Admin/Goods/add', '3', '35', '36', '2', '商品添加', '1', '50');
+INSERT INTO `permission` VALUES ('13', '商品修改', 'Admin/Goods/edit', '3', '37', '38', '2', '商品修改', '1', '50');
+INSERT INTO `permission` VALUES ('14', '商品列表', 'Admin/Goods/index', '3', '39', '40', '2', '商品列表', '1', '50');
+INSERT INTO `permission` VALUES ('15', '文章管理', '', '0', '22', '31', '1', '文章管理', '1', '50');
+INSERT INTO `permission` VALUES ('16', '文章发布', 'Admin/Article/add', '15', '23', '24', '2', '文章发布', '1', '50');
+INSERT INTO `permission` VALUES ('17', '文章修改', 'Admin/Article/edit', '15', '25', '26', '2', '文章修改', '1', '50');
+INSERT INTO `permission` VALUES ('18', '文章删除', 'Admin/Article/remove', '15', '27', '28', '2', '文章删除', '1', '50');
+INSERT INTO `permission` VALUES ('19', '文章列表', 'Admin/Article/index', '15', '29', '30', '2', '文章列表', '1', '50');
+INSERT INTO `permission` VALUES ('25', '供货商管理', '', '0', '2', '11', '1', '供货商管理', '1', '50');
+INSERT INTO `permission` VALUES ('26', '供货商列表', 'Admin/Supplier/index', '25', '3', '4', '2', '供货商列表', '1', '50');
+INSERT INTO `permission` VALUES ('27', '供货商添加', 'Admin/Supplier/add', '25', '5', '6', '2', '供货商添加', '1', '50');
+INSERT INTO `permission` VALUES ('28', '供货商修改', 'Admin/Supplier/edit', '25', '7', '8', '2', '供货商修改', '1', '50');
+INSERT INTO `permission` VALUES ('29', '供货商删除', 'Admin/Supplier/remove', '25', '9', '10', '2', '供货商删除', '1', '50');

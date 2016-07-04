@@ -81,3 +81,19 @@ function permission_pathes($data=null){
         session('PERMISSION_PATHES',$data);
     }
 }
+/**
+ * 获取和设置用户权限ID session
+ * @param mixed $data
+ * @return type
+ */
+function permission_pids($data=null){
+    if(is_null($data)){
+        $pids = session('PERMISSION_PIDS');
+        if(!is_array($pids)){
+            $pids = [];
+        }
+        return $pids;
+    }else{
+        session('PERMISSION_PIDS',$data);
+    }
+}
