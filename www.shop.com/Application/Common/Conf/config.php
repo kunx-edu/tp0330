@@ -12,6 +12,7 @@ return array(
         '__ZTREE__'=> BASE_URL . '/Public/Home/ext/ztree',
         '__TREEGRID__'=> BASE_URL . '/Public/Home/ext/treegrid',
         '__UEDITOR__'=> BASE_URL . '/Public/Home/ext/ueditor',
+        '__JQUERY_VALIDATE__'=> BASE_URL . '/Public/Home/ext/jquery-validate',
     ],
     
     /* 数据库设置 */
