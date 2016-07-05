@@ -264,3 +264,26 @@ INSERT INTO `permission` VALUES ('26', '供货商列表', 'Admin/Supplier/index'
 INSERT INTO `permission` VALUES ('27', '供货商添加', 'Admin/Supplier/add', '25', '5', '6', '2', '供货商添加', '1', '50');
 INSERT INTO `permission` VALUES ('28', '供货商修改', 'Admin/Supplier/edit', '25', '7', '8', '2', '供货商修改', '1', '50');
 INSERT INTO `permission` VALUES ('29', '供货商删除', 'Admin/Supplier/remove', '25', '9', '10', '2', '供货商删除', '1', '50');
+
+
+## 获取用户可见菜单
+;SELECT NAME,path,parent_id,id FROM menu_permission AS mp JOIN menu AS m ON mp.`menu_id`=m.`id` WHERE permission_id IN (1,2,3,4,5)
+
+;SELECT `id`,`parent_id`,`name`,`path` FROM menu m INNER JOIN menu_permission AS mp ON mp.menu_id=m.id WHERE `permission_id` IN ('26','27','28','29','4','12','13','14')
+
+
+
+##################################    day9        #######################
+#member(会员)
+;CREATE TABLE member (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR (50) NOT NULL DEFAULT '' COMMENT '用户名' UNIQUE,
+  `password` CHAR(32) NOT NULL DEFAULT '' COMMENT '密码',
+  tel CHAR(11) COMMENT '手机号码' ,
+  email VARCHAR (30) NOT NULL DEFAULT '' COMMENT 'Email',
+  add_time INT NOT NULL DEFAULT 0 COMMENT '加入时间',
+  last_login_time INT NOT NULL DEFAULT 0 COMMENT '最后登录时间',
+  last_login_ip BIGINT NOT NULL DEFAULT 0 COMMENT '最后登录IP',
+  salt CHAR(6) NOT NULL DEFAULT '' COMMENT '盐',
+  `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态: -1 删除  0 禁用  1:正常'
+) ENGINE = MYISAM COMMENT '会员' 
