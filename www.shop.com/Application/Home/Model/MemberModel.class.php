@@ -38,6 +38,8 @@ class MemberModel extends \Think\Model{
     protected $_auto = [
         ['add_time',NOW_TIME],
         ['salt','\Org\Util\String::randString',self::MODEL_INSERT,'function'],
+        ['register_token','\Org\Util\String::randString',self::MODEL_INSERT,'function',32],
+        ['status',0],//没有通过邮件验证的账号是禁用账户
     ];
     
     /**
@@ -70,6 +72,24 @@ class MemberModel extends \Think\Model{
     public function addMember() {
         //加盐加密
         $this->data['password']=  salt_mcrypt($this->data['password'], $this->data['salt']);
-        return $this->add();
+        $register_token = $this->data['register_token'];
+        $email = $this->data['email'];
+        if($this->add()===false){
+            return false;
+        }
+        
+        //发送激活邮件
+        $email;
+        $url = U('Member/active',['email'=>$email,'register_token'=>$register_token],true,true);
+        $subject = '欢迎注册啊咿呀哟母婴商城';
+        $content = '欢迎您注册我们的网站,请点击<a href="'.$url.'">链接</a>激活账号.如果无法点击,请复制以下链接粘贴到浏览器窗口打开!<br />' . $url;
+        
+        $rst = sendMail($email,$subject,$content);
+        if($rst['status']){
+            return true;
+        }else{
+            $this->error = $rst['msg'];
+            return false;
+        }
     }
 }

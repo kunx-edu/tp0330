@@ -39,5 +39,25 @@ class MemberController extends \Think\Controller{
         }
     }
     
+    /**
+     * 激活邮件.
+     * @param type $email
+     * @param type $register_token
+     */
+    public function active($email,$register_token) {
+        //查询有没有一个记录,邮箱和token和传过来的一致的
+        $cond = [
+            'email'=>$email,
+            'register_token'=>$register_token,
+            'status'=>0,
+        ];
+        if($this->_model->where($cond)->count()){
+            //修改状态
+            $this->_model->where($cond)->setField('status',1);
+            $this->success('激活成功',U('Index/index'));
+        }else{
+            $this->error('验证失败',U('Index/index'));
+        }
+    }
     
 }

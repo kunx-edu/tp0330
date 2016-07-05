@@ -287,3 +287,5 @@ INSERT INTO `permission` VALUES ('29', '供货商删除', 'Admin/Supplier/remove
   salt CHAR(6) NOT NULL DEFAULT '' COMMENT '盐',
   `status` TINYINT NOT NULL DEFAULT 0 COMMENT '状态: -1 删除  0 禁用  1:正常'
 ) ENGINE = MYISAM COMMENT '会员' 
+
+;ALTER TABLE member ADD register_token CHAR(32) AFTER email 
