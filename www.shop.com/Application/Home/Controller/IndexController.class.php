@@ -35,6 +35,9 @@ class IndexController extends Controller {
         }
         //帮助文章分类
         $this->assign('help_article_list',$help_article_list);
+
+        //获取用户登陆信息
+        $this->assign('userinfo',login());
     }
 
     public function index() {

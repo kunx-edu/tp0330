@@ -15,7 +15,7 @@ class MemberModel extends \Think\Model{
      */
     protected $_validate = [
         ['username','require','用户名不能为空'],
-        ['username','','用户名已存在',self::EXISTS_VALIDATE,'unique'],
+        ['username','','用户名已存在',self::EXISTS_VALIDATE,'unique','reg'],
         ['password','require','密码不能为空'],
         ['password','6,16','密码必须6-16位',self::EXISTS_VALIDATE,'length'],
         ['repassword','password','两次密码不一致',self::EXISTS_VALIDATE,'confirm'],
@@ -26,7 +26,7 @@ class MemberModel extends \Think\Model{
         ['tel','/^1[34578]\d{9}$/','手机号码不合法',self::EXISTS_VALIDATE,'regex'],
         ['email','','邮箱已存在',self::EXISTS_VALIDATE,'unique'],
         ['checkcode','require','图片验证码不能为空'],
-        ['checkcode','checkImgCode','图片验证码不正确',self::EXISTS_VALIDATE,'callback'],
+        ['checkcode','checkImgCode','图验证码不正确',self::EXISTS_VALIDATE,'callback'],
         ['captcha','require','手机验证码不能为空'],
         ['captcha','checkTelCode','手机验证码不正确',self::EXISTS_VALIDATE,'callback'],
     ];
@@ -36,10 +36,10 @@ class MemberModel extends \Think\Model{
      * salt:随机
      */
     protected $_auto = [
-        ['add_time',NOW_TIME],
-        ['salt','\Org\Util\String::randString',self::MODEL_INSERT,'function'],
-        ['register_token','\Org\Util\String::randString',self::MODEL_INSERT,'function',32],
-        ['status',0],//没有通过邮件验证的账号是禁用账户
+        ['add_time',NOW_TIME,'reg'],
+        ['salt','\Org\Util\String::randString','reg','function'],
+        ['register_token','\Org\Util\String::randString','reg','function',32],
+        ['status',0,'reg'],//没有通过邮件验证的账号是禁用账户
     ];
     
     /**
@@ -91,5 +91,32 @@ class MemberModel extends \Think\Model{
             $this->error = $rst['msg'];
             return false;
         }
+    }
+
+    public function login() {
+        //检查是否有这个用户
+        $username = $this->data['username'];
+        $password = $this->data['password'];
+        if(!$userinfo = $this->getByUsername($username)){
+            $this->error = '用户名或密码错误';
+            return false;
+        }
+
+        if(salt_mcrypt($password,$userinfo['salt']) != $userinfo['password']){
+            $this->error = '用户名或密码错误';
+            return false;
+        }
+
+        //记录用户的登陆时间
+        $data = [
+            'id'=>$userinfo['id'],
+            'last_login_time'=>NOW_TIME,
+            'last_login_ip'=>get_client_ip(1),
+        ];
+        $this->setField($data);
+        //将用户信息保存到session中.
+        login($userinfo);
+
+        return $userinfo;
     }
 }

@@ -35,7 +35,7 @@ class MemberController extends \Think\Controller{
      */
     public function reg() {
         if(IS_POST){
-            if($this->_model->create() === false){
+            if($this->_model->create('','reg') === false){
                 $this->error(get_error($this->_model));
             }
             if($this->_model->addMember() === false){
@@ -49,7 +49,13 @@ class MemberController extends \Think\Controller{
 
     public function login() {
         if(IS_POST){
-
+            if($this->_model->create() === false){
+                $this->error(get_error($this->_model));
+            }
+            if($this->_model->login() === false){
+                $this->error(get_error($this->_model));
+            }
+            $this->success('登陆成功',U('Index/index'));
         }else{
             $this->display();
         }
@@ -88,5 +94,11 @@ class MemberController extends \Think\Controller{
             $this->ajaxReturn(true);
         }
     }
-    
+
+
+    public function logout() {
+        session(null);
+        cookie(null);
+        $this->success('退出成功',U('Index/index'));
+    }
 }
