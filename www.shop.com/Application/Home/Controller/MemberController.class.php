@@ -20,6 +20,14 @@ class MemberController extends \Think\Controller{
     private $_model = null;
     protected function _initialize() {
         $this->_model=D('Member');
+
+        $mete_titles = [
+            'reg'=>'用户注册',
+            'login'=>'用户登陆',
+        ];
+        $meta_title = (isset($mete_titles[ACTION_NAME])?$mete_titles[ACTION_NAME]:'用户登陆');
+        $this->assign('meta_title',$meta_title);
+
     }
     
     /**
@@ -34,6 +42,14 @@ class MemberController extends \Think\Controller{
                 $this->error(get_error($this->_model));
             }
             $this->success('注册成功',U('index'));
+        }else{
+            $this->display();
+        }
+    }
+
+    public function login() {
+        if(IS_POST){
+
         }else{
             $this->display();
         }
@@ -57,6 +73,19 @@ class MemberController extends \Think\Controller{
             $this->success('激活成功',U('Index/index'));
         }else{
             $this->error('验证失败',U('Index/index'));
+        }
+    }
+
+    /**
+     * 检查注册信息是否已经被占用.
+     * 检查用户名,邮箱,手机号码.
+     */
+    public function checkByParam() {
+        $cond = I('get.');
+        if($this->_model->where($cond)->count()){
+            $this->ajaxReturn(false);
+        }else{
+            $this->ajaxReturn(true);
         }
     }
     

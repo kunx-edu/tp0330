@@ -38,21 +38,21 @@ class TestController extends \Think\Controller {
 
 
         $mail->isSMTP();                                      // Set mailer to use SMTP
-        $mail->Host       = 'smtp.126.com';  // Specify main and backup SMTP servers
-        $mail->SMTPAuth   = true;                               // Enable SMTP authentication
-        $mail->Username   = 'kunx_edu@126.com';                 // SMTP username
-        $mail->Password   = 'iam4ge';                           // SMTP password
-        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port       = 465;                                    // TCP port to connect to
+        $mail->Host       = 'smtp.exmail.qq.com';  //填写发送邮件的服务器地址
+        $mail->SMTPAuth   = true;                               // 使用smtp验证
+        $mail->Username   = 'message@kunx.org';                 // 发件人账号名
+        $mail->Password   = 'Ydm20160330';                           // 密码
+        $mail->SMTPSecure = 'ssl';                            // 使用协议,具体是什么根据你的邮件服务商来确定
+        $mail->Port       = 465;                                    // 使用的端口
 
-        $mail->setFrom('kunx_edu@126.com', 'ayiyayo');
-        $mail->addAddress('kunx-edu@qq.com', 'brother four');     // Add a recipient
+        $mail->setFrom('message@kunx.org', 'kunx.org'); //发件人,注意:邮箱地址必须和上面的一致
+        $mail->addAddress('kunx-edu@qq.com');     // 收件人
 
         $mail->isHTML(true);                                  // Set email format to HTML
 
         $mail->Subject = '欢迎注册啊咿呀哟母婴商城';
-        $url = U('Member/Active',['email'=>'kunx-eud@qq.com'],true,true);
-        $mail->Body    = '欢迎您注册我们的网站,请点击<a href="'.$url.'">链接</a>激活账号.如果无法点击,请复制以下链接粘贴到浏览器窗口打开!<br />' . $url;
+        $url           = U('Member/Active', ['email' => 'kunx-eud@qq.com'], true, true);
+        $mail->Body    = '欢迎您注册我们的网站,请点击<a href="' . $url . '">链接</a>激活账号.如果无法点击,请复制以下链接粘贴到浏览器窗口打开!<br />' . $url;
         $mail->CharSet = 'UTF-8';
 
         if (!$mail->send()) {
