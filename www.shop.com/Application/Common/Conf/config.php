@@ -57,5 +57,8 @@ return array(
         'Index:' => array('{:controller}_{:action}_{id}'),
         // 定义格式2 字符串方式
 //        '静态地址' => '静态规则',
-    )
+    ),
+    'DATA_CACHE_TYPE'=>'Redis',
+    'REDIS_HOST'=>'127.0.0.1',
+    'REDIS_PORT'=>6379,
 );

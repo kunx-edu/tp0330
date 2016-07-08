@@ -67,7 +67,6 @@ class IndexController extends Controller {
         if(!$row = $goods_model->getGoodsInfo($id)){
             $this->error('您查看的商品离家出走了,下次动作快点哟',U('index'));
         }
-        dump($row);
         $this->assign('row',$row);
         $this->display();
     }

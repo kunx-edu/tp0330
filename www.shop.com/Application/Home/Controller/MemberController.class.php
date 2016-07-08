@@ -101,4 +101,16 @@ class MemberController extends \Think\Controller{
         cookie(null);
         $this->success('退出成功',U('Index/index'));
     }
+
+    /**
+     * 获取用户名.
+     */
+    public function userinfo() {
+        $userinfo = login();
+        if($userinfo){
+            $this->ajaxReturn($userinfo['username']);
+        }else{
+            $this->ajaxReturn(false);
+        }
+    }
 }

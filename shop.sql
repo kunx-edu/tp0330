@@ -289,3 +289,22 @@ INSERT INTO `permission` VALUES ('29', '供货商删除', 'Admin/Supplier/remove
 ) ENGINE = MYISAM COMMENT '会员' 
 
 ;ALTER TABLE member ADD register_token CHAR(32) AFTER email 
+
+
+
+####################   day11    ##########################
+
+#goods_click(商品的浏览次数)
+;CREATE TABLE goods_click (
+  goods_id INT UNSIGNED PRIMARY KEY NOT NULL DEFAULT 0 COMMENT '商品',
+  click_times INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '点击次数'
+) ENGINE = MYISAM COMMENT '商品的浏览次数' 
+
+;#shopping_car(购物车)
+;CREATE TABLE shopping_car (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  goods_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '商品',
+  amount INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '数量',
+  member_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
+  INDEX (member_id)
+) ENGINE = MYISAM COMMENT '购物车' 

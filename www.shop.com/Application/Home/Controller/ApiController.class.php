@@ -37,5 +37,6 @@ class ApiController extends \Think\Controller{
         $req->setSmsTemplateCode("SMS_11495217");
         $resp         = $c->execute($req);
         dump($resp);
+
     }
 }

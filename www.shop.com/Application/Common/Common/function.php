@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 将模型的错误信息转换成一个有序列表。
  * @param \Think\Model $model 模型对象
@@ -131,4 +130,10 @@ function sendMail($email,$subject,$content){
         ];
         
     }
+}
+
+function get_redis(){
+    $redis = new Redis();
+    $redis->connect(C('REDIS_HOST'),C('REDIS_PORT'));
+    return $redis;
 }

@@ -157,7 +157,8 @@ class Redis {
 	  +----------------------------------------------------------
 	 */
 	public function write($sessID, $sessData) {
-		if (!$sessData || $sessData == $this->get_result) {
+        //如果数据为空或者现在的数据和历史数据一致
+		if ($sessData == $this->get_result) {
 			return true;
 		}
 		$this->connect(1);
