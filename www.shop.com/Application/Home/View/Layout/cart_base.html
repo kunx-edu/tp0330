@@ -19,7 +19,7 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li id="userinfo"></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -36,7 +36,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="index.html"><img src="__IMG__/logo.png" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="{:U('Index/index')}"><img src="__IMG__/logo.png" alt="京西商城"></a></h2>
         <div class="flow fr">
             <ul>
                 <li class="cur">1.我的购物车</li>
@@ -81,6 +81,23 @@
     </p>
 </div>
 <!-- 底部版权 end -->
+<script type="text/javascript" src="__JS__/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function(){
+        //当页面加载完毕,动态获取当前的用户名
+        //您好{$userinfo.username}，欢迎来到京西！[<a href="{:U('Member/login')}">登录</a>] [<a href="{:U('Member/reg')}">免费注册</a>]
+        var url = '{:U("Member/userinfo")}';
+        $.getJSON(url,function(username){
+            if(username){
+                var html1 = '您好'+username+'，欢迎来到京西！[<a href="{:U('Member/logout')}">退出</a>]';
+            } else{
+                var html1 = '您好，欢迎来到京西！[<a href="{:U('Member/login')}">登录</a>] [<a href="{:U('Member/reg')}">免费注册</a>]';
+
+            }
+            $('#userinfo').html(html1);
+        });
+    });
+</script>
 <block name="js"></block>
 </body>
 </html>

@@ -132,8 +132,21 @@ function sendMail($email,$subject,$content){
     }
 }
 
+/**
+ * 获取redis实例
+ * @return Redis
+ */
 function get_redis(){
     $redis = new Redis();
     $redis->connect(C('REDIS_HOST'),C('REDIS_PORT'));
     return $redis;
+}
+
+/**
+ * 本地金钱表示形式：100 表示为 100.00
+ * @param $number
+ * @return string
+ */
+function locate_number_format($number){
+    return number_format($number,2,'.','');
 }

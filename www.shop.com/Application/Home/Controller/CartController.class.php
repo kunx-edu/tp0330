@@ -17,11 +17,20 @@ use Think\Controller;
  * @package Home\Controller
  */
 class CartController extends Controller {
+
+    /**
+     * @var \Home\Model\ShoppingCarModel
+     */
+    private $_model = null;
+
+    protected function _initialize() {
+        $this->_model = D('ShoppingCar');
+    }
     public function add2car($id, $amount) {
         $userinfo = login();
         if (!$userinfo) {
             //未登录
-            $key      = 'USER_SHOPPING_CAR';
+            $key      = C('SHOPPING_CAR_COOKIE_KEY');
             $car_list = cookie($key);
             /**
              * [
@@ -40,14 +49,13 @@ class CartController extends Controller {
         }else{
             //已登录
             //获取当前商品的数量
-            $shopping_car_model = D('ShoppingCar');
-            $db_amount = $shopping_car_model->getAmountByGoodsId($id);
+            $db_amount = $this->_model->getAmountByGoodsId($id);
             if($db_amount){
                 //如果已经存在,就加数量
-                $shopping_car_model->addAmount($id,$amount);
+                $this->_model->addAmount($id,$amount);
             }else{
                 //如果不存在,就加记录
-                $shopping_car_model->add2car($id,$amount);
+                $this->_model->add2car($id,$amount);
             }
         }
         //跳转到购物车列表页面
@@ -55,7 +63,24 @@ class CartController extends Controller {
 
     }
 
+    /**
+     * 购物车列表
+     */
     public function flow1() {
+        $car_list = $this->_model->getShoppingCarList();
+        $this->assign($car_list);
         $this->display();
+    }
+
+    /**
+     * 填写订单信息，比如收获地址，发票信息，配送方式
+     * 此页面必须登陆才能看到。
+     */
+    public function flow2() {
+        $userinfo = login();
+        if(!$userinfo){
+            cookie('__FORWARD__',__SELF__);//将当前页面地址保存到cookie中，以便能够登陆后跳转
+            $this->error('本店不招待无名之辈',U('Member/login'));
+        }
     }
 }

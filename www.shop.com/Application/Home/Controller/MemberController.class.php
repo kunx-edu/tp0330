@@ -47,6 +47,10 @@ class MemberController extends \Think\Controller{
         }
     }
 
+    /**
+     * 用户登陆
+     * 获取和保存用户信息、自动将购物车cookie数据保存到MySQL中
+     */
     public function login() {
         if(IS_POST){
             if($this->_model->create() === false){
@@ -55,7 +59,14 @@ class MemberController extends \Think\Controller{
             if($this->_model->login() === false){
                 $this->error(get_error($this->_model));
             }
-            $this->success('登陆成功',U('Index/index'));
+            $url = cookie('__FORWARD__');
+            cookie('__FORWARD__',null);
+            if(!$url){
+                $url = U('Index/index');
+            }
+            //完成购物车的数据保存到MySQL中
+            $this->success('登陆成功',$url);
+
         }else{
             $this->display();
         }

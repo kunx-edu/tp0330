@@ -25,8 +25,8 @@ class MemberModel extends \Think\Model{
         ['tel','require','手机号码不能为空'],
         ['tel','/^1[34578]\d{9}$/','手机号码不合法',self::EXISTS_VALIDATE,'regex'],
         ['email','','邮箱已存在',self::EXISTS_VALIDATE,'unique'],
-        ['checkcode','require','图片验证码不能为空'],
-        ['checkcode','checkImgCode','图验证码不正确',self::EXISTS_VALIDATE,'callback'],
+//        ['checkcode','require','图片验证码不能为空'],
+//        ['checkcode','checkImgCode','图验证码不正确',self::EXISTS_VALIDATE,'callback'],
         ['captcha','require','手机验证码不能为空'],
         ['captcha','checkTelCode','手机验证码不正确',self::EXISTS_VALIDATE,'callback'],
     ];
@@ -116,6 +116,10 @@ class MemberModel extends \Think\Model{
         $this->setField($data);
         //将用户信息保存到session中.
         login($userinfo);
+
+        //获取cookie购物车数据保存到MySQL中，并清空cookie
+        $shopping_car_model = D('ShoppingCar');
+        $shopping_car_model->cookie2db();
 
         return $userinfo;
     }
