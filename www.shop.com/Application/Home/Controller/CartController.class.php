@@ -81,6 +81,8 @@ class CartController extends Controller {
         if(!$userinfo){
             cookie('__FORWARD__',__SELF__);//将当前页面地址保存到cookie中，以便能够登陆后跳转
             $this->error('本店不招待无名之辈',U('Member/login'));
+        }else{
+            $this->display();
         }
     }
 }

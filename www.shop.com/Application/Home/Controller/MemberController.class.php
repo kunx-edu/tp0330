@@ -28,6 +28,32 @@ class MemberController extends \Think\Controller{
         $meta_title = (isset($mete_titles[ACTION_NAME])?$mete_titles[ACTION_NAME]:'用户登陆');
         $this->assign('meta_title',$meta_title);
 
+
+
+        //判断是否需要展示商品分类,首页展示,其它页面折叠
+        $this->assign('show_category', false);
+
+        //由于分类数据和帮助文章列表数据,不会频繁发生变化,但是请求又较为频繁,所以我们进行缓存
+        if (!$goods_categories = S('goods_categories')) {
+            //准备商品分类数据
+            $goods_category_model = D('GoodsCategory');
+            $goods_categories = $goods_category_model->getList('id,name,parent_id');
+            S('goods_categories', $goods_categories,3600);
+        }
+        $this->assign('goods_categories', $goods_categories);
+
+
+        if (!$help_article_list = S('help_article_list')) {
+            //准备商品分类数据
+            $article_category_model = D('Article');
+            $help_article_list = $article_category_model->getHelpList();
+            S('help_article_list', $help_article_list,3600);
+        }
+        //帮助文章分类
+        $this->assign('help_article_list',$help_article_list);
+
+        //获取用户登陆信息
+        $this->assign('userinfo',login());
     }
     
     /**
@@ -123,5 +149,62 @@ class MemberController extends \Think\Controller{
         }else{
             $this->ajaxReturn(false);
         }
+    }
+
+    /**
+     * 收货地址列表页面
+     */
+    public function locationIndex() {
+        //获取省份列表
+        $location_model = D('Locations');
+        $provices = $location_model->getListByParentId();
+        $this->assign('provinces',$provices);
+        //取出所有的收货地址
+        $address_model = D('Address');
+        $this->assign('addresses',$address_model->getList());
+        $this->display();
+    }
+
+    /**
+     * 修改收获地址
+     */
+    public function modifyLocation($id) {
+        //当前地址的详细信息
+        $address_model = D('Address');
+        $row = $address_model->getAddressInfo($id);
+        $this->assign('row',$row);
+
+        //获取省份列表
+        $location_model = D('Locations');
+        $provices = $location_model->getListByParentId();
+        $this->assign('provinces',$provices);
+        $this->display();
+    }
+
+
+    /**
+     * 获取下级城市列表，使用json方式返回。
+     * @param $parent_id
+     */
+    public function getLocationListByParentId($parent_id) {
+        //获取省份列表
+        $location_model = D('Locations');
+        $provices = $location_model->getListByParentId($parent_id);
+        $this->ajaxReturn($provices);
+    }
+
+    /**
+     * 添加收获地址
+     */
+    public function addLocation() {
+        //准备数据
+        $address_model = D('Address');
+        if($address_model->create()===false){
+            $this->error(get_error($address_model));
+        }
+        if($address_model->addAddress()===false){
+            $this->error(get_error($address_model));
+        }
+        $this->success('添加完成',U('locationIndex'));
     }
 }

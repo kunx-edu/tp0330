@@ -308,3 +308,34 @@ INSERT INTO `permission` VALUES ('29', '供货商删除', 'Admin/Supplier/remove
   member_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '用户ID',
   INDEX (member_id)
 ) ENGINE = MYISAM COMMENT '购物车' 
+
+
+################################   day12  #########################
+
+;DROP TABLE IF EXISTS `locations`;
+
+CREATE TABLE `locations` (
+  `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
+  `parent_id` INT(10) UNSIGNED NOT NULL,
+  `level` TINYINT(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=5025 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE address (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (20) NOT NULL DEFAULT '' COMMENT '收货人',
+  province_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '省份',
+  city_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '城市',
+  area_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '区县',
+  detail_address VARCHAR (40) NOT NULL DEFAULT 0 COMMENT '详细地址',
+  tel CHAR(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  is_default TINYINT NOT NULL DEFAULT 0 COMMENT '默认地址',
+  member_id INT NOT NULL DEFAULT 0 COMMENT '会员ID'
+) ENGINE = MYISAM COMMENT '收货地址'
+
+;ALTER TABLE address 
+  ADD province_name VARCHAR (255) AFTER province_id,
+  ADD city_name VARCHAR (255) AFTER city_id,
+  ADD area_name VARCHAR (255) AFTER area_id 
