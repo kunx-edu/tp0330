@@ -135,18 +135,63 @@ class ShoppingCarModel extends Model {
          * ]
          */
         $goods_info_list = $goods_model->where($cond)->getField('id,name,logo,shop_price');
-//        $list = [];
         $total_price = 0.00;
+        //读取用户的积分
+        $score = M('Member')->where(['id'=>$userinfo['id']])->getField('score');
+        //获取用户的级别
+
+        //   bottom    socre    top
+        $cond = [
+            'bottom'=>['elt',$score],
+            'top'=>['egt',$score],
+        ];
+        $member_level = M('MemberLevel')->where($cond)->field('id,discount')->find();
+        $member_level_id = $member_level['id'];
+        $discount = $member_level['discount'];
+        //获取用户的会员价
+        $member_goods_price_model = M('MemberGoodsPrice');
         foreach($car_list as $goods_id=>$amount){
-//            $list[$goods_id] = $goods_info_list[$goods_id];
-//            $list[$goods_id]['amount'] = $amount;
+            //获取当前商品的会员价
+            $cond = [
+                'goods_id'=>$goods_id,
+                'member_level_id'=>$member_level_id,
+            ];
+            $member_price = $member_goods_price_model->where($cond)->getField('price');
+            if($member_price){
+                $goods_info_list[$goods_id]['shop_price'] = locate_number_format($member_price);
+            }else{
+                $goods_info_list[$goods_id]['shop_price'] = locate_number_format($goods_info_list[$goods_id]['shop_price'] * $discount / 100);
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+            //此时应当将会员价读取出来
             $goods_info_list[$goods_id]['amount'] = $amount;
-            $goods_info_list[$goods_id]['shop_price'] = locate_number_format($goods_info_list[$goods_id]['shop_price']);
+
             $goods_info_list[$goods_id]['sub_total'] = locate_number_format($goods_info_list[$goods_id]['shop_price'] * $amount);
             $total_price += $goods_info_list[$goods_id]['sub_total'];
 
         }
         $total_price = locate_number_format($total_price);
         return compact('total_price','goods_info_list');
+    }
+
+    /**
+     * 删除购物车数据。
+     * @return mixed
+     */
+    public function clearShoppingCar() {
+        $userinfo = login();
+        return $this->where(['member_id'=>$userinfo['id']])->delete();
     }
 }

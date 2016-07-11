@@ -49,14 +49,15 @@ class AddressModel extends Model{
     /**
      * 获取指定的地址信息。
      * @param integer $id 地址id。
+     * @param string  $field 要读取的字段列表。
      * @return array|null
      */
-    public function getAddressInfo($id) {
+    public function getAddressInfo($id,$field = '*') {
         $userinfo = login();
         $cond = [
             'member_id'=>$userinfo['id'],
             'id'=>$id,
         ];
-        return $this->where($cond)->find();
+        return $this->field($field)->where($cond)->find();
     }
 }

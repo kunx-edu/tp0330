@@ -26,6 +26,7 @@ class CartController extends Controller {
     protected function _initialize() {
         $this->_model = D('ShoppingCar');
     }
+
     public function add2car($id, $amount) {
         $userinfo = login();
         if (!$userinfo) {
@@ -46,20 +47,20 @@ class CartController extends Controller {
                 $car_list[$id] = $amount;
             }
             cookie($key, $car_list, 604800);//保存一周
-        }else{
+        } else {
             //已登录
             //获取当前商品的数量
             $db_amount = $this->_model->getAmountByGoodsId($id);
-            if($db_amount){
+            if ($db_amount) {
                 //如果已经存在,就加数量
-                $this->_model->addAmount($id,$amount);
-            }else{
+                $this->_model->addAmount($id, $amount);
+            } else {
                 //如果不存在,就加记录
-                $this->_model->add2car($id,$amount);
+                $this->_model->add2car($id, $amount);
             }
         }
         //跳转到购物车列表页面
-        $this->success('添加成功',U('flow1'));
+        $this->success('添加成功', U('flow1'));
 
     }
 
@@ -78,11 +79,25 @@ class CartController extends Controller {
      */
     public function flow2() {
         $userinfo = login();
-        if(!$userinfo){
-            cookie('__FORWARD__',__SELF__);//将当前页面地址保存到cookie中，以便能够登陆后跳转
-            $this->error('本店不招待无名之辈',U('Member/login'));
-        }else{
-            $this->display();
+        if (!$userinfo) {
+            cookie('__FORWARD__', __SELF__);//将当前页面地址保存到cookie中，以便能够登陆后跳转
+            $this->error('本店不招待无名之辈', U('Member/login'));
         }
+
+        //1.获取收获地址列表
+        $address_model = D('Address');
+        $this->assign('addresses', $address_model->getList());
+        //2.获取配送方式列表
+        $delivery_model = D('Delivery');
+        $this->assign('deliveries', $delivery_model->getList());
+        //3.获取支付方式列表
+        $payment_model = D('Payment');
+        $this->assign('payments', $payment_model->getList());
+
+        //4.获取购物车数据
+        $car_list = $this->_model->getShoppingCarList();
+        $this->assign($car_list);
+        $this->display();
+
     }
 }

@@ -339,3 +339,109 @@ CREATE TABLE address (
   ADD province_name VARCHAR (255) AFTER province_id,
   ADD city_name VARCHAR (255) AFTER city_id,
   ADD area_name VARCHAR (255) AFTER area_id 
+  
+  
+###############   day13    ##########################
+
+#delivery(送货方式)
+;CREATE TABLE delivery (
+  id TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (20) NOT NULL DEFAULT '' COMMENT '名称',
+  price DECIMAL (7, 2) NOT NULL DEFAULT 0 COMMENT '运费',
+  intro TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  sort TINYINT NOT NULL DEFAULT 20 COMMENT '排序',
+  is_default TINYINT NOT NULL DEFAULT 0 COMMENT '默认送货方式'
+) ENGINE = MYISAM COMMENT '送货方式'
+
+#支付方式
+;CREATE TABLE payment (
+  `id` TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (20) NOT NULL DEFAULT '' COMMENT '名称',
+  `intro` TEXT COMMENT '简介@textarea',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态@radio|1=是&0=否',
+  `sort` TINYINT NOT NULL DEFAULT 20 COMMENT '排序',
+  `is_default` TINYINT NOT NULL DEFAULT 0 COMMENT '默认支付方式'
+) ENGINE = MYISAM COMMENT '支付方式' 
+
+#invoice(发票)
+;CREATE TABLE invoice (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR (20) NOT NULL DEFAULT '' COMMENT '名称',
+  # 如果选择个人,使用当前用户名作为发票的名字, 如果选择公司,就是用填写的内容作为发票的名称
+  content TEXT COMMENT '发票内容',
+  price DECIMAL (10, 2) NOT NULL DEFAULT 0 COMMENT '发票金额',
+  inputtime INT NOT NULL DEFAULT 0 COMMENT '发票时间',
+  member_id INT NOT NULL DEFAULT 0 COMMENT '会员ID',
+  order_info_id INT NULL DEFAULT 0 COMMENT '订单ID'
+) ENGINE = INNODB COMMENT '发票' 
+
+
+;CREATE TABLE order_info (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  member_id INT NOT NULL DEFAULT 0 COMMENT '会员ID',
+  `name` VARCHAR (20) NOT NULL DEFAULT '' COMMENT '收货人',
+  province_name VARCHAR (30) NOT NULL DEFAULT 0 COMMENT '省份',
+  city_name VARCHAR (30) NOT NULL DEFAULT 0 COMMENT '城市',
+  area_name VARCHAR (30) NOT NULL DEFAULT 0 COMMENT '区县',
+  detail_address VARCHAR (40) NOT NULL DEFAULT 0 COMMENT '详细地址',
+  tel CHAR(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  delivery_id TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '配送方式的ID',
+  #主要是为了将来的高级查询使用
+  delivery_name VARCHAR (30) NOT NULL DEFAULT '' COMMENT '配送方式的名字',#反三范式
+  #为了展示订单时方便查看到配送方式的名字
+  delivery_price DECIMAL (7, 2) NOT NULL DEFAULT 0 COMMENT '运费',#运费价格可能变化
+  pay_type_id TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '支付方式',
+  pay_type_name VARCHAR(30) NOT NULL DEFAULT 1 COMMENT '支付方式名字',#反三范式
+  price DECIMAL (10, 2) NOT NULL DEFAULT 0 COMMENT '商品金额',
+  `status` TINYINT NOT NULL DEFAULT 1 COMMENT '订单状态 0已取消 1待付款 2待发货 3待收货 4完成',
+  trade_no CHAR(30) NOT NULL DEFAULT '' COMMENT '第三方支付的交易号'
+) ENGINE = INNODB COMMENT '订单'
+
+#order_info_item(订单明细)
+;CREATE TABLE order_info_item (
+  id INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  order_info_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '订单ID',
+  goods_id INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '商品ID',
+  goods_name VARCHAR (32) NOT NULL DEFAULT '' COMMENT '商品的名称',
+  logo VARCHAR (255) NOT NULL DEFAULT '' COMMENT 'LOGO',
+  price DECIMAL (10, 2) NOT NULL DEFAULT 0 COMMENT '价格',
+  amount INT UNSIGNED NOT NULL DEFAULT 0 COMMENT '数量',
+  total_price DECIMAL (10, 2) NOT NULL DEFAULT 0 COMMENT '小计'
+) ENGINE = INNODB COMMENT '订单明细' 
+
+
+;TRUNCATE order_info
+;TRUNCATE order_info_item
+;TRUNCATE invoice
+
+
+
+#member_level(会员级别)
+ ;CREATE TABLE `member_level` (
+  `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '名称',
+  `bottom` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '积分下限',
+  `top` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '积分上限',
+  `discount` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT '折扣率80 90 100',
+  `intro` TEXT COMMENT '简介@textarea',
+  `status` TINYINT(4) NOT NULL DEFAULT '1' COMMENT '状态@radio|1=是&0=否',
+  `sort` TINYINT(4) NOT NULL DEFAULT '20' COMMENT '排序',
+  PRIMARY KEY (`id`),
+  KEY `bottom` (`bottom`,`top`)
+) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='会员级别'
+
+
+
+#member_goods_price(会员商品价格)
+;CREATE TABLE `member_goods_price` (
+id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `goods_id` INT(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT '商品ID',
+  `member_level_id` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT '级别的ID',
+  `price` DECIMAL(10,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
+  KEY `goods_id` (`goods_id`),
+  KEY `goods_id_2` (`goods_id`,`member_level_id`)
+) ENGINE=MYISAM DEFAULT CHARSET=utf8 COMMENT='会员商品价格'
+
+# 在用户表中增加字段保存用户积分
+;ALTER TABLE member ADD score INT DEFAULT 0 UNSIGNED AFTER email
