@@ -445,3 +445,8 @@ id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 
 # 在用户表中增加字段保存用户积分
 ;ALTER TABLE member ADD score INT DEFAULT 0 UNSIGNED AFTER email
+
+
+####  day14   #####
+#修改订单表,添加订单创建时间字段
+;ALTER TABLE order_info ADD inputtime INT UNSIGNED 

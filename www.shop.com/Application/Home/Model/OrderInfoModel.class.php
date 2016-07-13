@@ -12,6 +12,18 @@ namespace Home\Model;
 use Think\Model;
 
 class OrderInfoModel extends Model {
+    
+    /**
+     * 订单状态.
+     * @var array 
+     */
+    public $statuses = [
+        0=>'已取消',
+        1=>'待支付',
+        2=>'待发货',
+        3=>'待收货',
+        4=>'完成',
+    ];
 
     /**
      * 创建订单
@@ -165,5 +177,34 @@ delivery_price');
 
         $this->commit();
         return true;
+    }
+    
+    /**
+     * 获取用户的订单列表
+     * @param type $param
+     */
+    public function getList() {
+        $userinfo = login();
+        $cond = [
+            'member_id'=>$userinfo['id'],
+        ];
+        $rows = $this->where($cond)->select();
+        
+        //取出订单详情
+        $order_info_item_model = M('OrderInfoItem');
+        foreach($rows as $key=>$value){
+            $rows[$key]['goods_list'] = $order_info_item_model->field('goods_id,goods_name,logo')->where(['order_info_id'=>$value['id']])->select();
+        }
+        return $rows;
+        
+    }
+    
+    /**
+     * 获取订单信息.
+     * @param type $id
+     * @return type
+     */
+    public function getOrderInfoById($id) {
+        return $this->find($id);
     }
 }
