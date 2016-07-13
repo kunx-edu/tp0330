@@ -159,9 +159,11 @@ class ShoppingCarModel extends Model {
             $member_price = $member_goods_price_model->where($cond)->getField('price');
             if($member_price){
                 $goods_info_list[$goods_id]['shop_price'] = locate_number_format($member_price);
-            }else{
+            }elseif($userinfo){
                 $goods_info_list[$goods_id]['shop_price'] = locate_number_format($goods_info_list[$goods_id]['shop_price'] * $discount / 100);
 
+            }else{
+                $goods_info_list[$goods_id]['shop_price'] = locate_number_format($goods_info_list[$goods_id]['shop_price']);
             }
 
 

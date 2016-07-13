@@ -18,6 +18,8 @@ class OrderInfoModel extends Model {
      * 1.创建订单基本信息表记录
      * 2.保存订单详情
      * 3.保存发票信息
+     * 4.扣除库存
+     *  获取每一个要购买的商品库存是否足够
      */
     public function addOrder() {
         $this->startTrans();
@@ -40,6 +42,38 @@ delivery_price');
         //1.4获取订单金额
         $shopping_car_model   = D('ShoppingCar');
         $cart_info            = $shopping_car_model->getShoppingCarList();
+        
+        //4补加逻辑,获取商品库存,如果不够,不能创建订单
+        //or (id=1 and stock>1) or id=2 and stock=3
+        $cond['_logic'] = 'OR';
+        foreach($cart_info['goods_info_list'] as $key=>$value){
+            $cond[] = [
+                'id'=>$key,
+                'stock'=>['lt',$value['amount'],],
+            ];
+        }
+        $goods_model = M('Goods');
+        $not_enough_stock_list = $goods_model->where($cond)->select();
+        $error = '';
+        //库存不足,就提示错误信息,不再执行后续流程.
+        if($not_enough_stock_list){
+            foreach($not_enough_stock_list as $goods){
+                $error .= $goods['name'] . ' ';
+            }
+            $this->error = $error . '库存不足';
+            $this->rollback();
+            return false;
+        }
+        
+        //库存足够,减库存
+        foreach($cart_info['goods_info_list'] as $goods){
+            if($goods_model->where(['id'=>$goods['id']])->setDec('stock', $goods['amount'])===false){
+                $this->error = '更新库存失败';
+                $this->rollback();
+                return false;
+            }
+        }
+        
         $this->data['price']  = $cart_info['total_price'];
         $this->data['status'] = 1;//订单创建状态为未支付。
         if (($order_id = $this->add()) === false) {
